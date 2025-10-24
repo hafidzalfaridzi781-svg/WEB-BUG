@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            width: 400px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            color: white;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            color: white;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        input:focus {
+            background-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .admin-contact {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .admin-contact p {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .admin-btn {
+            background: linear-gradient(to right, #2193b0, #6dd5ed);
+        }
+        
+        .shake {
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% {transform: translateX(0);}
+            10%, 30%, 50%, 70%, 90% {transform: translateX(-10px);}
+            20%, 40%, 60%, 80% {transform: translateX(10px);}
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .success-message {
+            color: #4ade80;
+            font-weight: 600;
+            margin-top: 20px;
+            font-size: 18px;
+            text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Login System</h1>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Masukkan username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Masukkan password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        
+        <div id="successMessage" class="hidden success-message">
+            Login Berhasil! Selamat datang!
+        </div>
+        
+        <div class="admin-contact">
+            <p>Lupa username atau password?</p>
+            <button class="admin-btn" onclick="contactAdmin()">Hubungi Admin</button>
+        </div>
+    </div>
+
+    <script>
+        // Data login yang disembunyikan
+        const correctUsername = "KAIZYE";
+        const correctPassword = "123GG";
+        
+        // Elemen form dan pesan
+        const loginForm = document.getElementById('loginForm');
+        const successMessage = document.getElementById('successMessage');
+        
+        // Fungsi untuk memutar suara
+        function playSound() {
+            // Membuat konteks audio
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Membuat osilator untuk suara bass yang menggelegar
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            // Mengatur jenis gelombang dan frekuensi
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(80, audioContext.currentTime);
+            
+            // Mengatur gain (volume) untuk efek menggelegar
+            gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1.5);
+            
+            // Menghubungkan node
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // Memulai dan menghentikan osilator
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 1.5);
+        }
+        
+        // Event listener untuk form login
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Validasi login
+            if (username.toUpperCase() === correctUsername && password === correctPassword) {
+                // Login berhasil
+                playSound(); // Memutar suara menggelegar
+                successMessage.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+                
+                // Tambahkan efek visual
+                document.querySelector('.container').style.boxShadow = '0 0 30px rgba(74, 222, 128, 0.7)';
+                
+                // Reset form setelah 3 detik
+                setTimeout(() => {
+                    successMessage.classList.add('hidden');
+                    loginForm.classList.remove('hidden');
+                    document.querySelector('.container').style.boxShadow = '0 15px 25px rgba(0, 0, 0, 0.5)';
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                }, 3000);
+            } else {
+                // Login gagal
+                loginForm.classList.add('shake');
+                setTimeout(() => {
+                    loginForm.classList.remove('shake');
+                }, 500);
+                
+                alert('Username atau password salah!');
+            }
+        });
+        
+        // Fungsi untuk menghubungi admin
+        function contactAdmin() {
+            window.open('https://t.me/KAIZYE_STORE', '_blank');
+        }
+    </script>
+</body>
+</html>
